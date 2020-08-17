@@ -1,9 +1,11 @@
-const { Router } = require("express");
+const { Router, request } = require("express");
 const Course = require("../models/course");
 const router = Router();
 
 router.get("/", async (request, response) => {
-  const courses = await Course.find();
+  const courses = await Course.find()
+    .populate("userId", "email name")
+    .select("price title img");
 
   response.status(200);
   response.render("courses", {
@@ -36,6 +38,12 @@ router.get("/:id/edit", async ({ params, query }, response) => {
 router.post("/edit", async ({ body }, response) => {
   const { id, ...rest } = body;
   await Course.findByIdAndUpdate(id, rest);
+  response.redirect("/courses");
+});
+
+router.post("/remove", async ({ body }, response) => {
+  const { id } = body;
+  await Course.deleteOne({ _id: id });
   response.redirect("/courses");
 });
 
