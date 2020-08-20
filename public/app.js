@@ -24,6 +24,8 @@ document.querySelectorAll(".date").forEach((node) => {
   node.textContent = toDate(node.textContent);
 });
 
+M.Tabs.init(document.querySelector(".tabs"));
+
 if ($cart) {
   $cart.addEventListener("click", ({ target }) => {
     const { removeId } = target.dataset;
